@@ -1,44 +1,76 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
-   New Perspectives on XML
-   Tutorial 3
-   Case Problem 3
-
-   The Save Exotic Animals Trust schema
-   Author: Melissa Coates
-   Date: 2024-07-23
-
-   Filename:         roster.xsd
-   Supporting Files: roster.xml
--->      
-
+New Perspectives on XML
+Tutorial 3
+Case Problem 3
+The Save Exotic Animals Trust schema
+Author: Melissa Coates
+Date: July 28, 2024
+Filename: roster.xsd
+Supporting Files: roster.xml
+-->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <!-- Define the named simple types -->
+  <xs:simpleType name="pType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="home"/>
+      <xs:enumeration value="cell"/>
+      <xs:enumeration value="work"/>
+    </xs:restriction>
+  </xs:simpleType>
 
-   <!-- Define simple types -->
-   <xs:simpleType name="pType">
-      <xs:restriction base="xs:string">
-         <xs:enumeration value="home"/>
-         <xs:enumeration value="cell"/>
-         <xs:enumeration value="work"/>
-      </xs:restriction>
-   </xs:simpleType>
+  <xs:simpleType name="methodType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Phone"/>
+      <xs:enumeration value="Personal"/>
+      <xs:enumeration value="Mail"/>
+    </xs:restriction>
+  </xs:simpleType>
 
-   <xs:simpleType name="methodType">
-      <xs:restriction base="xs:string">
-         <xs:enumeration value="Phone"/>
-         <xs:enumeration value="Personal"/>
-         <xs:enumeration value="Mail"/>
-      </xs:restriction>
-   </xs:simpleType>
+  <xs:simpleType name="levelType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="founder"/>
+      <xs:enumeration value="sponsor"/>
+      <xs:enumeration value="patron"/>
+      <xs:enumeration value="friendship"/>
+    </xs:restriction>
+  </xs:simpleType>
 
-   <xs:simpleType name="levelType">
-      <xs:restriction base="xs:string">
-         <xs:enumeration value="founder"/>
-         <xs:enumeration value="sponsor"/>
-         <xs:enumeration value="patron"/>
-         <xs:enumeration value="friendship"/>
-      </xs:restriction>
-   </xs:simpleType>
+  <xs:simpleType name="phoneType">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="\([0-9]{3}\) [0-9]{3}-[0-9]{4}"/>
+      <xs:length value="14"/>
+    </xs:restriction>
+  </xs:simpleType>
 
-   <xs:simpleType name="phoneType">
-      <
+  <!-- Declare the roster element -->
+  <xs:element name="roster">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="donor" maxOccurs="unbounded" minOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="name" type="xs:string"/>
+              <xs:element name="address" type="xs:string"/>
+              <xs:element name="phone" maxOccurs="2" minOccurs="1">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="phoneType">
+                      <xs:attribute name="type" type="pType" use="required"/>
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="email" type="xs:string" minOccurs="0"/>
+              <xs:element name="donation" type="xs:decimal"/>
+              <xs:element name="method" type="methodType"/>
+              <xs:element name="effectiveDate" type="xs:date"/>
+            </xs:sequence>
+            <xs:attribute name="level" type="levelType" use="required"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>
